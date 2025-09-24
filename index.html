@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Quiz - Ecuaciones Diferenciales</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      /* Fondo degradado con naranja, amarillo y blanco */
+      background: linear-gradient(to right, orange, yellow, white);
+      color: #333;
+      text-align: center;
+      margin: 0;
+      padding: 0;
+    }
+    .container {
+      width: 80%;
+      max-width: 700px;
+      margin: 50px auto;
+      background: rgba(255, 255, 255, 0.9);
+      border-radius: 15px;
+      padding: 30px;
+      box-shadow: 0 0 15px rgba(0,0,0,0.3);
+    }
+    h1 {
+      font-size: 26px;
+      margin-bottom: 20px;
+      color: #e67e22;
+    }
+    #pregunta {
+      font-size: 20px;
+      margin: 20px 0;
+      font-weight: bold;
+    }
+    .opcion {
+      display: block;
+      margin: 10px auto;
+      padding: 12px;
+      width: 80%;
+      background: orange;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      color: white;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+    .opcion:hover {
+      background: #e67e22;
+    }
+    #progreso {
+      margin-top: 20px;
+      font-weight: bold;
+    }
+    #puntaje {
+      margin-top: 10px;
+      font-size: 18px;
+    }
+    #resultado {
+      font-size: 22px;
+      margin-top: 20px;
+      font-weight: bold;
+      color: #d35400;
+    }
+    footer {
+      margin-top: 25px;
+      font-size: 14px;
+      color: #333;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>🎮 Quiz de Ecuaciones Diferenciales</h1>
+    <div id="pregunta"></div>
+    <div id="opciones"></div>
+    <div id="progreso"></div>
+    <div id="puntaje">Puntaje: 0</div>
+    <div id="resultado"></div>
+    <footer>
+      By <b>Yair Ospino</b>, <b>Lucas Herazo</b> y <b>Diomar Ochoa</b>
+    </footer>
+  </div>
+
+  <script>
+    const preguntas = [
+      "1. ¿Qué significa 'dy/dx'?",
+      "2. ¿Qué es una ecuación homogénea?",
+      "3. ¿Qué representa la constante C en una solución?",
+      "4. ¿Qué es un coeficiente lineal?",
+      "5. ¿La ecuación y'' + 5y' + 6y = 0 es de qué orden?",
+      "6. ¿Cuál es el factor integrante de dy/dx + (2/x)y = 3?",
+      "7. ¿Qué forma tiene una ecuación diferencial lineal de primer orden?",
+      "8. ¿Cuál es la variable dependiente en dy/dx?",
+      "9. ¿Qué se usa para resolver ecuaciones lineales con coeficientes constantes?",
+      "10. ¿Qué tipo de función aparece comúnmente en las soluciones de ecuaciones lineales?"
+    ];
+
+    const opciones = [
+      ["A) Derivada de y respecto a x", "B) División de y entre x", "C) Producto de y y x", "D) Ninguna"],
+      ["A) Una ecuación con términos del mismo grado", "B) Una ecuación de segundo orden", "C) Una constante", "D) Un polinomio"],
+      ["A) Una incógnita fija", "B) Una constante arbitraria", "C) El valor de x", "D) Ninguna"],
+      ["A) El número que multiplica una variable", "B) El resultado de una división", "C) Una constante independiente", "D) Una función trigonométrica"],
+      ["A) Primer orden", "B) Segundo orden", "C) Tercer orden", "D) Ninguno"],
+      ["A) x^2", "B) e^x", "C) 1/x^2", "D) ln(x)"],
+      ["A) dy/dx + P(x)y = Q(x)", "B) dy/dx = y/x", "C) y'' + ay' + by = 0", "D) x dy/dx + y = 0"],
+      ["A) y", "B) x", "C) C", "D) Ninguna"],
+      ["A) Polinomios", "B) Ecuación característica", "C) Derivadas parciales", "D) Series infinitas"],
+      ["A) Exponenciales", "B) Trigonométricas", "C) Logarítmicas", "D) Polinomios"]
+    ];
+
+    const respuestas = ["A", "A", "B", "A", "B", "A", "A", "A", "B", "A"];
+
+    let indicePregunta = 0;
+    let puntaje = 0;
+
+    const preguntaElem = document.getElementById("pregunta");
+    const opcionesElem = document.getElementById("opciones");
+    const progresoElem = document.getElementById("progreso");
+    const puntajeElem = document.getElementById("puntaje");
+    const resultadoElem = document.getElementById("resultado");
+
+    function mostrarPregunta() {
+      preguntaElem.textContent = preguntas[indicePregunta];
+      opcionesElem.innerHTML = "";
+      opciones[indicePregunta].forEach(opcion => {
+        const boton = document.createElement("button");
+        boton.textContent = opcion;
+        boton.className = "opcion";
+        boton.onclick = () => verificarRespuesta(opcion.charAt(0));
+        opcionesElem.appendChild(boton);
+      });
+      progresoElem.textContent = `Pregunta ${indicePregunta + 1} de ${preguntas.length}`;
+    }
+
+    function verificarRespuesta(respuesta) {
+      if (respuesta === respuestas[indicePregunta]) {
+        puntaje++;
+        alert("✅ Correcto!");
+      } else {
+        alert("❌ Incorrecto. La respuesta era: " + respuestas[indicePregunta]);
+      }
+
+      indicePregunta++;
+      if (indicePregunta < preguntas.length) {
+        mostrarPregunta();
+      } else {
+        mostrarResultado();
+      }
+      puntajeElem.textContent = "Puntaje: " + puntaje;
+    }
+
+    function mostrarResultado() {
+      resultadoElem.textContent = `🎉 Juego terminado. Tu puntaje final es: ${puntaje} / ${preguntas.length}`;
+      opcionesElem.innerHTML = "";
+      preguntaElem.textContent = "";
+      progresoElem.textContent = "";
+    }
+
+    mostrarPregunta();
+  </script>
+</body>
+</html>
